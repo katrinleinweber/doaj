@@ -138,9 +138,10 @@ class ArticlesCrudApi(CrudApi):
         if ar.is_in_doaj():
             return OutgoingArticleDO.from_model(ar)
 
-        # as long as authentication (in the layer above) has been successful, and the account exists, then
-        # we are good to proceed
-        if account is None:
+        # as long as authentication (in the layer above) has been successful,
+        # and the account exists and is not anonymous,
+        # then we are good to proceed
+        if account is None and account.is_anonymous:
             raise Api401Error()
 
         # Check we're allowed to retrieve this article
